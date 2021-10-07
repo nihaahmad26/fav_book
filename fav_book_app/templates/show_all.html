@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show All</title>
+</head>
+<body>
+        <div>
+            <a href="#">Favorite Books</a>
+            <button type="button" data-toggle="collapse" data-target="#navbarText"
+                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            </button>
+            <div>
+                <span>
+                    Welcome, {{request.session.greeting}} </a> <a href="/logout" role="button">Logout</a>
+                </span>
+            </div>
+        </div>
+    </nav>
+
+    <div">
+        <div>
+            <div>
+                <h3>Add Book</h3>
+                
+                <form action="/books/create" method="post">
+                    {% csrf_token %}
+                    {% for message in messages %}
+                        <p>{{ message }}</p>
+                    {% endfor %}
+                    <div>
+                        <label for="title">Title</label>
+                        <input type="text" name="title">
+                        
+                    </div>
+
+                    <div>
+                        <label for="description">Description</label>
+                        <input type="text" name="description">
+                    </div>
+                    <button type="submit" >Submit</button>
+                </form>
+            </div>
+
+            <div>
+                <h3>Favorited Books</h3>
+                {% for book in all_books %}
+                {% if this_user in book.favorited_by.all %}
+                <div>
+                    <h5><a href="/books/{{book.id}}">{{book.title}}</a></h5>
+                    <p>(added by {{book.creator.first_name}} {{book.creator.last_name}})</p>
+                </div>
+                {% endif %}
+                {% endfor %}
+                <h3>Other Books</h3>
+                {% for book in all_books %}
+                {% if this_user not in book.favorited_by.all %}
+                <div>
+                    <h5><a href="/books/{{book.id}}">{{book.title}}</a></h5>
+                    <p>(added by {{book.creator.first_name}} {{book.creator.last_name}})</p>
+                </div>
+                {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</body>
+</html>
